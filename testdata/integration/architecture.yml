@@ -1,0 +1,15 @@
+version: 3
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+components:
+  gate:              { in: "pkg/gate" }
+  pack:              { in: "pkg/pack" }
+  pack_distribution: { in: "pkg/pack/distribution" }
+
+deps:
+  gate:              { mayDependOn: [pack] }
+  pack:              { anyVendorDeps: true }
+  pack_distribution: { mayDependOn: [pack] }

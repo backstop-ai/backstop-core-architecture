@@ -1,0 +1,39 @@
+name: backstop-ai/backstop-core-architecture
+version: "0.1.0"
+language: go
+archetype: enforcement
+description: >-
+  Backstop Core's production Go package topology. Classifies every production
+  package, enforces permitted direct project imports with go-arch-lint, and
+  normalizes analyzer findings to portable SARIF.
+engines:
+  go-arch-lint:
+    command: go-arch-lint check --output-type json --max-warnings 10000
+    input_mode: config-file
+    input_flag: --arch-file
+    scope_kind: project-wide
+    convert: scripts/go-arch-lint-to-sarif.sh
+    crash_guard: true
+    exempt_from_scope_filter: true
+    category: opinion
+    gate_type: findings
+content:
+  ruleset:
+    version: "0.1.0"
+    rules:
+      - id: package-boundaries
+        standard: "Backstop Core packages import only declared architectural dependencies"
+        engine: go-arch-lint
+        rule_path: architecture/backstop-core.yml
+        risk_class: correctness
+        justification: >-
+          Direct project-import analysis prevents a package from acquiring
+          knowledge of a component outside its declared responsibility.
+      - id: unclassified-package
+        standard: "Every production Go source file belongs to a declared Backstop Core component"
+        engine: go-arch-lint
+        rule_path: architecture/backstop-core.yml
+        risk_class: correctness
+        justification: >-
+          Classification is the anti-bypass guard for the dependency graph: a new
+          package cannot evade import policy by living outside the component map.

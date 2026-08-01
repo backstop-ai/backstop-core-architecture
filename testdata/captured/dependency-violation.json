@@ -1,0 +1,23 @@
+{
+  "Type": "models.Check",
+  "Payload": {
+    "ArchHasWarnings": true,
+    "ArchWarningsDeps": [
+      {
+        "ComponentName": "gate",
+        "FileRelativePath": "/pkg/gate/gate.go",
+        "FileAbsolutePath": "/workspace/project/pkg/gate/gate.go",
+        "ResolvedImportName": "example.com/architecture-fixture/pkg/pack/distribution",
+        "Reference": {
+          "Valid": true,
+          "File": "/workspace/project/pkg/gate/gate.go",
+          "Line": 5,
+          "Offset": 2
+        }
+      }
+    ],
+    "ArchWarningsNotMatched": [],
+    "ArchWarningsDeepScan": [],
+    "OmittedCount": 0
+  }
+}

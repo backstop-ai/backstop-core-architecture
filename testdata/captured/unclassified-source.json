@@ -1,0 +1,15 @@
+{
+  "Type": "models.Check",
+  "Payload": {
+    "ArchHasWarnings": true,
+    "ArchWarningsDeps": [],
+    "ArchWarningsNotMatched": [
+      {
+        "FileRelativePath": "/pkg/rogue/rogue.go",
+        "FileAbsolutePath": "/workspace/project/pkg/rogue/rogue.go"
+      }
+    ],
+    "ArchWarningsDeepScan": [],
+    "OmittedCount": 0
+  }
+}

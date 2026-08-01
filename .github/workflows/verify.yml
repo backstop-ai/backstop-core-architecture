@@ -1,0 +1,78 @@
+name: verify
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the pushed ref
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+
+      - name: Install go-arch-lint
+        run: go install github.com/fe3dback/go-arch-lint@v1.16.0
+
+      - name: Run converter and analyzer integration fixtures
+        run: sh scripts/test.sh
+
+      - name: Install a YAML parser
+        run: python3 -m pip install --quiet --disable-pip-version-check pyyaml
+
+      - name: Assert pack.yml identity and semantic version
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re, sys, yaml
+
+          try:
+              manifest = yaml.safe_load(open("pack.yml"))
+          except yaml.YAMLError as exc:
+              sys.exit(f"::error file=pack.yml::pack.yml is not valid YAML: {exc}")
+
+          if not isinstance(manifest, dict):
+              sys.exit("::error file=pack.yml::pack.yml did not parse to a mapping")
+
+          name = manifest.get("name")
+          if name != "backstop-ai/backstop-core-architecture":
+              sys.exit(f"::error file=pack.yml::unexpected pack identity {name!r}")
+
+          version = str(manifest.get("version"))
+          if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+              sys.exit(f"::error file=pack.yml::version {version!r} is not X.Y.Z semver")
+
+          print(f"pack.yml identity {name} and version {version} are valid")
+          PY
+
+      - name: Assert tag matches pack version
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          PUSHED_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, sys, yaml
+
+          tag = os.environ["PUSHED_TAG"]
+          expected = tag[1:]
+          declared = str(yaml.safe_load(open("pack.yml")).get("version"))
+          if declared != expected:
+              sys.exit(
+                  f"::error file=pack.yml::tag {tag} implies {expected}, "
+                  f"but pack.yml declares {declared}"
+              )
+          print(f"tag {tag} matches pack.yml version {declared}")
+          PY

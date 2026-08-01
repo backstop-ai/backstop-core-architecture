@@ -1,0 +1,56 @@
+version: 3
+
+allow:
+  # v0.1 governs project imports only. Vendor policy and interface-injection
+  # analysis are explicit future dimensions, not silent claims of this release.
+  depOnAnyVendor: true
+  deepScan: false
+
+exclude:
+  - ".backstop"
+  - "tests"
+
+excludeFiles:
+  - "^.*_test\\.go$"
+  - "^.*\\/testdata\\/.*$"
+
+components:
+  root:              { in: "." }
+  cli:               { in: "cmd/backstop" }
+  artifact:          { in: "pkg/artifact" }
+  baseengines:       { in: "pkg/baseengines" }
+  check:             { in: "pkg/check" }
+  config:            { in: "pkg/config" }
+  gate:              { in: "pkg/gate" }
+  pack:              { in: "pkg/pack" }
+  pack_distribution: { in: "pkg/pack/distribution" }
+  pack_engine:       { in: "pkg/pack/engine" }
+  packval:           { in: "pkg/packval" }
+  recipe:            { in: "pkg/recipe" }
+  scaffold:          { in: "pkg/scaffold" }
+  schema:            { in: "pkg/schema" }
+  validate:          { in: "pkg/validate" }
+  waiver:            { in: "pkg/waiver" }
+
+deps:
+  # cmd/backstop is the composition root. Its broad outgoing access does not
+  # grant any core component permission to import the CLI.
+  root:              { anyVendorDeps: true }
+  cli:               { anyProjectDeps: true }
+  artifact:          { anyVendorDeps: true }
+  # Embedded base-engine loading is current topology, not a generic pack claim.
+  baseengines:       { mayDependOn: [root, pack, pack_engine] }
+  check:             { anyVendorDeps: true }
+  config:            { mayDependOn: [root] }
+  # pack and config are current direct dependencies. The architecture file is a
+  # ratchet: changing or removing either edge requires an explicit policy edit.
+  gate:              { mayDependOn: [check, config, pack, waiver] }
+  pack:              { mayDependOn: [pack_engine] }
+  pack_distribution: { mayDependOn: [pack, packval] }
+  pack_engine:       { anyVendorDeps: true }
+  packval:           { mayDependOn: [baseengines, check, pack_engine, recipe] }
+  recipe:            { mayDependOn: [pack, waiver] }
+  scaffold:          { anyVendorDeps: true }
+  schema:            { mayDependOn: [artifact] }
+  validate:          { mayDependOn: [artifact, schema] }
+  waiver:            { anyVendorDeps: true }

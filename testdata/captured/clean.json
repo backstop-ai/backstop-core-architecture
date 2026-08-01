@@ -1,0 +1,10 @@
+{
+  "Type": "models.Check",
+  "Payload": {
+    "ArchHasWarnings": false,
+    "ArchWarningsDeps": [],
+    "ArchWarningsNotMatched": [],
+    "ArchWarningsDeepScan": [],
+    "OmittedCount": 0
+  }
+}
