@@ -22,6 +22,7 @@ components:
   check:             { in: "pkg/check" }
   config:            { in: "pkg/config" }
   gate:              { in: "pkg/gate" }
+  initialize:        { in: "pkg/initialize" }
   pack:              { in: "pkg/pack" }
   pack_distribution: { in: "pkg/pack/distribution" }
   pack_engine:       { in: "pkg/pack/engine" }
@@ -48,6 +49,9 @@ deps:
   # imports no other project component, so depending on it cannot create a cycle;
   # schema and validate already declare the same edge.
   gate:              { mayDependOn: [artifact, check, config, pack, waiver] }
+  # backstop init (SPEC-069): the same production seams other consumers of pack
+  # install/recipe-apply already use, plus yaml.v3 to write backstop.yml.
+  initialize:        { mayDependOn: [check, config, pack, pack_distribution, recipe], anyVendorDeps: true }
   pack:              { mayDependOn: [pack_engine] }
   pack_distribution: { mayDependOn: [pack, packval] }
   pack_engine:       { anyVendorDeps: true }
