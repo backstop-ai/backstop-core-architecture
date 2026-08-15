@@ -1,5 +1,5 @@
 name: backstop-ai/backstop-core-architecture
-version: "0.1.1"
+version: "0.1.2"
 language: go
 archetype: enforcement
 description: >-

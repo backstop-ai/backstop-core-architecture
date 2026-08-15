@@ -44,13 +44,18 @@ deps:
   config:            { mayDependOn: [root] }
   # pack and config are current direct dependencies. The architecture file is a
   # ratchet: changing or removing either edge requires an explicit policy edit.
-  gate:              { mayDependOn: [check, config, pack, waiver] }
+  # artifact is the shared artifact-layout / root-resolution authority (SPEC-068). It
+  # imports no other project component, so depending on it cannot create a cycle;
+  # schema and validate already declare the same edge.
+  gate:              { mayDependOn: [artifact, check, config, pack, waiver] }
   pack:              { mayDependOn: [pack_engine] }
   pack_distribution: { mayDependOn: [pack, packval] }
   pack_engine:       { anyVendorDeps: true }
   packval:           { mayDependOn: [baseengines, check, pack_engine, recipe] }
   recipe:            { mayDependOn: [pack, waiver] }
-  scaffold:          { anyVendorDeps: true }
+  # scaffold reads artifact type directories and extensions from the same shared
+  # layout authority rather than keeping a private copy of them (SPEC-068).
+  scaffold:          { mayDependOn: [artifact], anyVendorDeps: true }
   schema:            { mayDependOn: [artifact] }
   validate:          { mayDependOn: [artifact, schema] }
   waiver:            { anyVendorDeps: true }
