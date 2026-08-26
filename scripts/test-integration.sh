@@ -13,8 +13,9 @@ fi
 
 run_analyzer() {
   project=$1
+  policy=${2:-$config}
   set +e
-  analyzer_output=$("$analyzer" check --output-type json --max-warnings 10000 --arch-file "$config" --project-path "$project")
+  analyzer_output=$("$analyzer" check --output-type json --max-warnings 10000 --arch-file "$policy" --project-path "$project")
   analyzer_status=$?
   set -e
 }
@@ -52,5 +53,15 @@ printf '%s' "$unclassified_sarif" | jq -e '
   .runs[0].results[0].ruleId == "unclassified-package" and
   .runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri == "pkg/rogue/rogue.go"
 ' >/dev/null
+
+grep -Fq 'product_truth:     { in: "scripts/producttruth" }' "$root/architecture/backstop-core.yml"
+grep -Fq 'product_truth:     { anyVendorDeps: true }' "$root/architecture/backstop-core.yml"
+run_analyzer "$root/testdata/integration/product-truth" "$root/testdata/integration/product-truth-architecture.yml"
+if [ "$analyzer_status" -ne 0 ]; then
+  printf '%s\n' "product-truth component fixture failed go-arch-lint" >&2
+  exit 1
+fi
+product_truth_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
+printf '%s' "$product_truth_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
 
 printf '%s\n' "go-arch-lint integration fixtures passed"
