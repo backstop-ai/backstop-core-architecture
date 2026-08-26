@@ -1,0 +1,11 @@
+version: 3
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+components:
+  product_truth: { in: "scripts/producttruth" }
+
+deps:
+  product_truth: { anyVendorDeps: true }

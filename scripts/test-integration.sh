@@ -54,7 +54,9 @@ printf '%s' "$unclassified_sarif" | jq -e '
   .runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri == "pkg/rogue/rogue.go"
 ' >/dev/null
 
-run_analyzer "$root/testdata/integration/product-truth" "$root/architecture/backstop-core.yml"
+grep -Fq 'product_truth:     { in: "scripts/producttruth" }' "$root/architecture/backstop-core.yml"
+grep -Fq 'product_truth:     { anyVendorDeps: true }' "$root/architecture/backstop-core.yml"
+run_analyzer "$root/testdata/integration/product-truth" "$root/testdata/integration/product-truth-architecture.yml"
 if [ "$analyzer_status" -ne 0 ]; then
   printf '%s\n' "product-truth component fixture failed go-arch-lint" >&2
   exit 1
