@@ -23,6 +23,7 @@ components:
   config:            { in: "pkg/config" }
   gate:              { in: "pkg/gate" }
   initialize:        { in: "pkg/initialize" }
+  product_truth:     { in: "scripts/producttruth" }
   pack:              { in: "pkg/pack" }
   pack_distribution: { in: "pkg/pack/distribution" }
   pack_engine:       { in: "pkg/pack/engine" }
@@ -52,6 +53,9 @@ deps:
   # backstop init (SPEC-069): the same production seams other consumers of pack
   # install/recipe-apply already use, plus yaml.v3 to write backstop.yml.
   initialize:        { mayDependOn: [check, config, pack, pack_distribution, recipe], anyVendorDeps: true }
+  # Repository-local product-truth generation is isolated from the released
+  # Core packages. It may use vendor libraries but cannot import project code.
+  product_truth:     { anyVendorDeps: true }
   pack:              { mayDependOn: [pack_engine] }
   pack_distribution: { mayDependOn: [pack, packval] }
   pack_engine:       { anyVendorDeps: true }
