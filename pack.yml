@@ -1,5 +1,5 @@
 name: backstop-ai/backstop-core-architecture
-version: "0.1.4"
+version: "0.1.5"
 language: go
 archetype: enforcement
 description: >-
@@ -19,7 +19,7 @@ engines:
     gate_type: findings
 content:
   ruleset:
-    version: "0.1.0"
+    version: "0.1.1"
     rules:
       - id: package-boundaries
         standard: "Backstop Core packages import only declared architectural dependencies"

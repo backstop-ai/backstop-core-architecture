@@ -1,0 +1,16 @@
+version: 3
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+excludeFiles:
+  - "^.*_test\\.go$"
+
+components:
+  root: { in: "." }
+  sitecheck: { in: "scripts/sitecheck" }
+
+deps:
+  root: { anyVendorDeps: true }
+  sitecheck: { anyVendorDeps: true }
