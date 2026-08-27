@@ -25,6 +25,7 @@ components:
   initialize:        { in: "pkg/initialize" }
   product_truth:     { in: "scripts/producttruth" }
   sitecheck:         { in: "scripts/sitecheck" }
+  site_contracts:    { in: "scripts/render-public-site-contracts" }
   pack:              { in: "pkg/pack" }
   pack_distribution: { in: "pkg/pack/distribution" }
   pack_engine:       { in: "pkg/pack/engine" }
@@ -60,6 +61,9 @@ deps:
   # Seed 4's repository-local static-site verifier is isolated from released
   # Core packages. It may parse YAML/HTML but cannot import project code.
   sitecheck:         { anyVendorDeps: true }
+  # Seed 4's rendered-contract stamper is likewise repository-local and may not
+  # import released Core packages.
+  site_contracts:    { anyVendorDeps: true }
   pack:              { mayDependOn: [pack_engine] }
   pack_distribution: { mayDependOn: [pack, packval] }
   pack_engine:       { anyVendorDeps: true }
