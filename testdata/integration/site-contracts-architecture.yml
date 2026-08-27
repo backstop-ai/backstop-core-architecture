@@ -1,0 +1,16 @@
+version: 3
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+excludeFiles:
+  - "^.*_test\\.go$"
+
+components:
+  root: { in: "." }
+  site_contracts: { in: "scripts/render-public-site-contracts" }
+
+deps:
+  root: { anyVendorDeps: true }
+  site_contracts: { anyVendorDeps: true }

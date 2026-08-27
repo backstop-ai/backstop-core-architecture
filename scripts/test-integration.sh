@@ -74,4 +74,14 @@ fi
 sitecheck_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
 printf '%s' "$sitecheck_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
 
+grep -Fq 'site_contracts:    { in: "scripts/render-public-site-contracts" }' "$root/architecture/backstop-core.yml"
+grep -Fq 'site_contracts:    { anyVendorDeps: true }' "$root/architecture/backstop-core.yml"
+run_analyzer "$root/testdata/integration/site-contracts" "$root/testdata/integration/site-contracts-architecture.yml"
+if [ "$analyzer_status" -ne 0 ]; then
+  printf '%s\n' "rendered-contract stamper fixture failed go-arch-lint" >&2
+  exit 1
+fi
+site_contracts_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
+printf '%s' "$site_contracts_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
+
 printf '%s\n' "go-arch-lint integration fixtures passed"
