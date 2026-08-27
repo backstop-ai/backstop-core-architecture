@@ -64,4 +64,14 @@ fi
 product_truth_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
 printf '%s' "$product_truth_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
 
+grep -Fq 'sitecheck:         { in: "scripts/sitecheck" }' "$root/architecture/backstop-core.yml"
+grep -Fq 'sitecheck:         { anyVendorDeps: true }' "$root/architecture/backstop-core.yml"
+run_analyzer "$root/testdata/integration/sitecheck" "$root/testdata/integration/sitecheck-architecture.yml"
+if [ "$analyzer_status" -ne 0 ]; then
+  printf '%s\n' "sitecheck component fixture failed go-arch-lint" >&2
+  exit 1
+fi
+sitecheck_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
+printf '%s' "$sitecheck_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
+
 printf '%s\n' "go-arch-lint integration fixtures passed"
