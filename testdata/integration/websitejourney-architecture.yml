@@ -1,0 +1,16 @@
+version: 3
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+excludeFiles:
+  - "^.*_test\\.go$"
+
+components:
+  root: { in: "." }
+  websitejourney: { in: "scripts/websitejourney" }
+
+deps:
+  root: { anyVendorDeps: true }
+  websitejourney: { anyVendorDeps: true }

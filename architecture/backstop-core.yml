@@ -26,6 +26,7 @@ components:
   product_truth:     { in: "scripts/producttruth" }
   sitecheck:         { in: "scripts/sitecheck" }
   site_contracts:    { in: "scripts/render-public-site-contracts" }
+  websitejourney:    { in: "scripts/websitejourney" }
   pack:              { in: "pkg/pack" }
   pack_distribution: { in: "pkg/pack/distribution" }
   pack_engine:       { in: "pkg/pack/engine" }
@@ -64,6 +65,9 @@ deps:
   # Seed 4's rendered-contract stamper is likewise repository-local and may not
   # import released Core packages.
   site_contracts:    { anyVendorDeps: true }
+  # Seed 5's repository-local capability/journey map tooling is isolated from
+  # released Core packages. It may parse YAML but cannot import project code.
+  websitejourney:    { anyVendorDeps: true }
   pack:              { mayDependOn: [pack_engine] }
   pack_distribution: { mayDependOn: [pack, packval] }
   pack_engine:       { anyVendorDeps: true }

@@ -84,4 +84,14 @@ fi
 site_contracts_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
 printf '%s' "$site_contracts_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
 
+grep -Fq 'websitejourney:    { in: "scripts/websitejourney" }' "$root/architecture/backstop-core.yml"
+grep -Fq 'websitejourney:    { anyVendorDeps: true }' "$root/architecture/backstop-core.yml"
+run_analyzer "$root/testdata/integration/websitejourney" "$root/testdata/integration/websitejourney-architecture.yml"
+if [ "$analyzer_status" -ne 0 ]; then
+  printf '%s\n' "websitejourney component fixture failed go-arch-lint" >&2
+  exit 1
+fi
+websitejourney_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
+printf '%s' "$websitejourney_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
+
 printf '%s\n' "go-arch-lint integration fixtures passed"
