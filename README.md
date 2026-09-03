@@ -12,10 +12,10 @@ Version 0.1 enforces two properties:
 - Every direct project import follows the component dependency allowlist in
   `architecture/backstop-core.yml`.
 
-Version 0.1.7 classifies Core's isolated `scripts/producttruth`,
-`scripts/sitecheck`, `scripts/render-public-site-contracts`, and
-`scripts/websitejourney` repository tooling and explicitly grants them no
-imports from released Core packages.
+Version 0.1.8 classifies Core's isolated `scripts/producttruth`,
+`scripts/sitecheck`, `scripts/render-public-site-contracts`,
+`scripts/websitejourney`, and `scripts/entityref` repository tooling and
+explicitly grants them no imports from released Core packages.
 
 The classification rule is an anti-bypass guard: a new package cannot evade
 dependency policy by living outside the component map.
@@ -42,7 +42,7 @@ go install github.com/fe3dback/go-arch-lint@v1.16.0
 Install the published release with:
 
 ```sh
-backstop pack add backstop-ai/backstop-core-architecture@0.1.7
+backstop pack add backstop-ai/backstop-core-architecture@0.1.8
 ```
 
 The pack remains external to Backstop Core. The consumer's `backstop.lock` is

@@ -94,4 +94,14 @@ fi
 websitejourney_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
 printf '%s' "$websitejourney_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
 
+grep -Fq 'entityref:         { in: "scripts/entityref" }' "$root/architecture/backstop-core.yml"
+grep -Fq 'entityref:         { anyVendorDeps: true }' "$root/architecture/backstop-core.yml"
+run_analyzer "$root/testdata/integration/entityref" "$root/testdata/integration/entityref-architecture.yml"
+if [ "$analyzer_status" -ne 0 ]; then
+  printf '%s\n' "entityref component fixture failed go-arch-lint" >&2
+  exit 1
+fi
+entityref_sarif=$(printf '%s' "$analyzer_output" | sh "$converter")
+printf '%s' "$entityref_sarif" | jq -e '(.runs[0].results | length) == 0' >/dev/null
+
 printf '%s\n' "go-arch-lint integration fixtures passed"

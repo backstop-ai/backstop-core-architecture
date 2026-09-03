@@ -27,6 +27,7 @@ components:
   sitecheck:         { in: "scripts/sitecheck" }
   site_contracts:    { in: "scripts/render-public-site-contracts" }
   websitejourney:    { in: "scripts/websitejourney" }
+  entityref:         { in: "scripts/entityref" }
   pack:              { in: "pkg/pack" }
   pack_distribution: { in: "pkg/pack/distribution" }
   pack_engine:       { in: "pkg/pack/engine" }
@@ -68,6 +69,9 @@ deps:
   # Seed 5's repository-local capability/journey map tooling is isolated from
   # released Core packages. It may parse YAML but cannot import project code.
   websitejourney:    { anyVendorDeps: true }
+  # Visitor entity-reference page generation is repository-local and isolated
+  # from released Core packages. It may parse YAML but cannot import project code.
+  entityref:         { anyVendorDeps: true }
   pack:              { mayDependOn: [pack_engine] }
   pack_distribution: { mayDependOn: [pack, packval] }
   pack_engine:       { anyVendorDeps: true }

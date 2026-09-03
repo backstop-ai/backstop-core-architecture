@@ -1,0 +1,16 @@
+version: 3
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+excludeFiles:
+  - "^.*_test\\.go$"
+
+components:
+  root: { in: "." }
+  entityref: { in: "scripts/entityref" }
+
+deps:
+  root: { anyVendorDeps: true }
+  entityref: { anyVendorDeps: true }
